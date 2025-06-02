@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sui rifiuti ospedalieri per l'Operatore Socio-Sanitario (OSS): scopri tipologie, gestione e quiz interattivi.">
+    <meta name="keywords" content="rifiuti ospedalieri, OSS, gestione rifiuti, smaltimento, quiz rifiuti">
+    <title>I Rifiuti Ospedalieri</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>I Rifiuti Ospedalieri</h1>
+        <p>Gestione e Smaltimento per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#tipologie">Tipologie</a>
+        <a href="#norme">Norme</a>
+        <a href="#gestione">Gestione</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione ai Rifiuti Ospedalieri</h2>
+            <p>I rifiuti sanitari derivano da strutture pubbliche e private che svolgono attività mediche e veterinarie di prevenzione, diagnosi, cura, riabilitazione e ricerca (DPR n. 254/2003, art. 2).</p>
+        </section>
+
+        <section id="tipologie">
+            <h2>Tipologie di Rifiuti Sanitari</h2>
+            <ul>
+                <li>Rifiuti sanitari non pericolosi</li>
+                <li>Rifiuti sanitari assimilati ai rifiuti urbani</li>
+                <li>Rifiuti sanitari pericolosi non a rischio infettivo</li>
+                <li>Rifiuti sanitari pericolosi a rischio infettivo</li>
+                <li>Rifiuti sanitari che richiedono particolari sistemi di smaltimento</li>
+                <li>Rifiuti da esumazioni, estumulazioni e attività cimiteriali (esclusi vegetali)</li>
+                <li>Rifiuti speciali analoghi ai pericolosi a rischio infettivo (esclusi assorbenti igienici)</li>
+            </ul>
+        </section>
+
+        <section id="norme">
+            <h2>Norme di Riferimento</h2>
+            <p>Il DPR n. 254/2003 disciplina la gestione dei rifiuti sanitari per tutelare ambiente e salute pubblica, integrandosi con il D.Lgs. n. 152/2006. La classificazione usa i codici CER.</p>
+        </section>
+
+        <section id="gestione">
+            <h2>Gestione dei Rifiuti Sanitari</h2>
+            <h3>Rifiuti non pericolosi</h3>
+            <p>Gestiti come rifiuti non pericolosi.</p>
+            <h3>Rifiuti assimilati agli urbani</h3>
+            <p>Gestiti come rifiuti urbani se non pericolosi o infettivi.</p>
+            <h3>Rifiuti pericolosi non infettivi</h3>
+            <p>Gestiti come rifiuti non pericolosi.</p>
+            <h3>Rifiuti pericolosi infettivi</h3>
+            <p>Smaltiti con termodistruzione o sterilizzazione.</p>
+            <h3>Rifiuti con particolari modalità</h3>
+            <p>Smaltiti mediante incenerimento.</p>
+            <h3>Rifiuti da esumazioni/estumulazioni</h3>
+            <p>Raccolti separatamente e smaltiti in impianti autorizzati.</p>
+            <h3>Rifiuti speciali analoghi agli infettivi</h3>
+            <p>Gestiti come rifiuti infettivi.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sui Rifiuti Ospedalieri</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 I Rifiuti Ospedalieri - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Cosa definisce i rifiuti sanitari secondo il DPR 254/2003?", options: ["Rifiuti da attività mediche", "Rifiuti urbani", "Rifiuti industriali", "Rifiuti agricoli"], correct: "Rifiuti da attività mediche" },
+                { question: "Quale norma regola i rifiuti sanitari?", options: ["DPR n. 254/2003", "D.Lgs. n. 22/1997", "Legge 135/1990", "D.Lgs. 152/1997"], correct: "DPR n. 254/2003" },
+                { question: "Quale tipo di rifiuto è assimilato agli urbani?", options: ["Non pericoloso e non infettivo", "Infettivo", "Pericoloso non infettivo", "Da esumazioni"], correct: "Non pericoloso e non infettivo" },
+                { question: "Come si smaltiscono i rifiuti infettivi?", options: ["Termodistruzione o sterilizzazione", "Discarica", "Recupero", "Incenerimento obbligatorio"], correct: "Termodistruzione o sterilizzazione" },
+                { question: "Quale rifiuto richiede incenerimento?", options: ["Farmaci stupefacenti", "Pasti non infetti", "Carta riciclabile", "Assorbenti"], correct: "Farmaci stupefacenti" },
+                { question: "Dove si depositano i rifiuti da esumazioni?", options: ["Area confinata nel cimitero", "Locale reparto", "Discarica urbana", "Taniche"], correct: "Area confinata nel cimitero" },
+                { question: "Quale DPI è obbligatorio per i rifiuti infettivi?", options: ["Guanti", "Cuffia", "Mascherina FFP3", "Scarpe da ginnastica"], correct: "Guanti" },
+                { question: "Quale contenitore è usato per i taglienti?", options: ["Halibox", "Cartone", "Tanica", "Sacco"], correct: "Halibox" },
+                { question: "Quanto deve essere riempito un contenitore infettivo?", options: ["3/4", "Completamente", "1/2", "1/4"], correct: "3/4" },
+                { question: "Cosa si scrive sull’etichetta dei rifiuti infettivi?", options: ["Tipo di rifiuto e reparto", "Nome paziente", "Codice fiscale", "Data nascita"], correct: "Tipo di rifiuto e reparto" },
+                { question: "Quale regola si applica ai taglienti?", options: ["Non passarli di mano", "Portarli in tasca", "Coprirli sempre", "Schiacciarli"], correct: "Non passarli di mano" },
+                { question: "Cosa fare in caso di puntura da tagliente?", options: ["Informare il responsabile", "Ignorare", "Lavarsi solo le mani", "Andare a casa"], correct: "Informare il responsabile" },
+                { question: "Quale rifiuto non infettivo è chimico?", options: ["Solventi", "Pasti non infetti", "Carta", "Pannoloni"], correct: "Solventi" },
+                { question: "Come si smaltiscono i reagenti scaduti?", options: ["Confezioni originali", "Taniche", "Sacchi urbani", "Halibox"], correct: "Confezioni originali" },
+                { question: "Quale rifiuto non pericoloso è riciclabile?", options: ["Vetro", "Aghi", "Farmaci", "Organi"], correct: "Vetro" },
+                { question: "Quale contenitore è per i rifiuti non pericolosi?", options: ["Riutilizzabile", "Halibox", "Tanica", "Cartone monouso"], correct: "Riutilizzabile" },
+                { question: "Chi ritira i rifiuti non pericolosi?", options: ["Impresa di pulizia", "Ditta autorizzata", "Personale medico", "Farmacia"], correct: "Impresa di pulizia" },
+                { question: "Quale rifiuto richiede particolari modalità?", options: ["Farmaci chemioterapici", "Pannoloni", "Plastica", "Spazzatura"], correct: "Farmaci chemioterapici" },
+                { question: "Dove si consegnano i farmaci scaduti?", options: ["Farmacia ospedale", "Locale reparto", "Discarica", "Inceneritore"], correct: "Farmacia ospedale" },
+                { question: "Quale codice classifica i rifiuti?", options: ["CER", "ISO", "HBS", "HIV"], correct: "CER" },
+                { question: "Quale rifiuto speciale è escluso dagli infettivi?", options: ["Assorbenti igienici", "Sangue", "Aghi", "Organi"], correct: "Assorbenti igienici" },
+                { question: "Quanto tempo restano i rifiuti infettivi nel locale?", options: ["24 ore", "48 ore", "1 settimana", "1 mese"], correct: "24 ore" },
+                { question: "Quale regola si applica agli aghi caduti?", options: ["Raccoglierli con pinze", "Raccoglierli a mano", "Coprirli", "Schiacciarli"], correct: "Raccoglierli con pinze" },
+                { question: "Quale test si fa al paziente fonte?", options: ["HBSAG", "Glucosio", "Colesterolo", "Pressione"], correct: "HBSAG" },
+                { question: "Quale rifiuto non infettivo contiene mercurio?", options: ["Termometri rotti", "Pasti", "Carta", "Pannoloni"], correct: "Termometri rotti" },
+                { question: "Come si chiudono i contenitori infettivi?", options: ["Senza schiacciare", "Schiacciando", "Con nastro", "Con colla"], correct: "Senza schiacciare" },
+                { question: "Quale DPI è usato per i chemioterapici?", options: ["DPI aziendali", "Solo guanti", "Cuffia", "Mascherina FFP2"], correct: "DPI aziendali" },
+                { question: "Quale rifiuto non pericoloso è da giardino?", options: ["Rifiuti vegetali", "Aghi", "Farmaci", "Sangue"], correct: "Rifiuti vegetali" },
+                { question: "Dove si depositano i rifiuti non infettivi?", options: ["Locale dedicato", "Discarica", "Farmacia", "Cimitero"], correct: "Locale dedicato" },
+                { question: "Quale regola vale per i contenitori non infettivi?", options: ["Non disinfettare", "Schiacciare", "Riempire del tutto", "Disinfettare"], correct: "Non disinfettare" }
+            ],
+            // Quiz 2
+            [
+                { question: "Da quali strutture derivano i rifiuti sanitari?", options: ["Strutture mediche", "Fabbriche", "Scuole", "Uffici"], correct: "Strutture mediche" },
+                { question: "Quale decreto integra il D.Lgs. 152/2006?", options: ["DPR 254/2003", "Legge 135/1990", "D.Lgs. 22/1997", "DPR 152/1997"], correct: "DPR 254/2003" },
+                { question: "Quale rifiuto è pericoloso non infettivo?", options: ["Amianto", "Aghi", "Sangue", "Organi"], correct: "Amianto" },
+                { question: "Come si gestiscono i rifiuti infettivi sterilizzati?", options: ["Come non pericolosi", "Termodistruzione", "Discarica urbana", "Recupero"], correct: "Come non pericolosi" },
+                { question: "Quale rifiuto da cimiteri è escluso?", options: ["Vegetali", "Esumazioni", "Estumulazioni", "Rifiuti vari"], correct: "Vegetali" },
+                { question: "Quale contenitore è per i liquidi infettivi?", options: ["Taniche", "Halibox", "Cartone", "Sacco"], correct: "Taniche" },
+                { question: "Quale DPI è consigliato per i rifiuti infettivi?", options: ["Occhiali", "Cappello", "Grembiule", "Calzini"], correct: "Occhiali" },
+                { question: "Chi autorizza la sterilizzazione interna?", options: ["Non necessaria", "Regione", "ASL", "Ministero"], correct: "Non necessaria" },
+                { question: "Quale regola si applica ai taglienti in caduta?", options: ["Non raccoglierli", "Raccoglierli a mano", "Coprirli", "Schiacciarli"], correct: "Non raccoglierli" },
+                { question: "Cosa fare con sangue HIV positivo?", options: ["Contattare malattie infettive", "Lavarsi le mani", "Ignorare", "Andare a casa"], correct: "Contattare malattie infettive" },
+                { question: "Quale rifiuto non infettivo è da radiologia?", options: ["Soluzioni di lavaggio", "Pannoloni", "Carta", "Pasti"], correct: "Soluzioni di lavaggio" },
+                { question: "Come si smaltiscono i solventi?", options: ["Fustini di plastica", "Taniche", "Sacchi urbani", "Halibox"], correct: "Fustini di plastica" },
+                { question: "Quale rifiuto non pericoloso è da cucina?", options: ["Pasti non infetti", "Aghi", "Farmaci", "Sangue"], correct: "Pasti non infetti" },
+                { question: "Quale colore usano i sacchetti non pericolosi?", options: ["Conforme al comune", "Rosso", "Giallo", "Verde"], correct: "Conforme al comune" },
+                { question: "Quale rifiuto va in farmacia ospedale?", options: ["Farmaci scaduti", "Aghi", "Pannoloni", "Vetro"], correct: "Farmaci scaduti" },
+                { question: "Quale contenitore è per i chemioterapici?", options: ["Con dicitura specifica", "Halibox", "Sacco urbano", "Tanica"], correct: "Con dicitura specifica" },
+                { question: "Quale codice è usato per la classificazione?", options: ["CER", "ISO", "HBS", "HIV"], correct: "CER" },
+                { question: "Quale rifiuto speciale è simile agli infettivi?", options: ["Sangue fuori strutture", "Assorbenti igienici", "Carta", "Pasti"], correct: "Sangue fuori strutture" },
+                { question: "Dove si trasportano i rifiuti infettivi?", options: ["Locale reparto", "Discarica", "Farmacia", "Cimitero"], correct: "Locale reparto" },
+                { question: "Quale regola evita il passaggio di taglienti?", options: ["Non passarli di mano", "Portarli in tasca", "Coprirli", "Schiacciarli"], correct: "Non passarli di mano" },
+                { question: "Quale documento si compila per un infortunio?", options: ["Scheda rischio biologico", "Certificato INAIL", "Cartella clinica", "Modulo CER"], correct: "Scheda rischio biologico" },
+                { question: "Quale rifiuto non infettivo è da analisi?", options: ["Lampade fluorescenti", "Pasti", "Carta", "Pannoloni"], correct: "Lampade fluorescenti" },
+                { question: "Come si gestiscono le batterie?", options: ["Contenitori ermetici", "Taniche", "Sacchi", "Halibox"], correct: "Contenitori ermetici" },
+                { question: "Quale rifiuto non pericoloso è ortopedico?", options: ["Gessi", "Aghi", "Farmaci", "Sangue"], correct: "Gessi" },
+                { question: "Quale regola si applica agli aghi gengivali?", options: ["Metodo no-touch", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Metodo no-touch" },
+                { question: "Dove si va dopo un infortunio biologico?", options: ["Pronto soccorso", "Farmacia", "Reparto", "Casa"], correct: "Pronto soccorso" },
+                { question: "Quale test si richiede al paziente?", options: ["Anti-HCV", "Glucosio", "Colesterolo", "Pressione"], correct: "Anti-HCV" },
+                { question: "Quale rifiuto non infettivo è da laboratori?", options: ["Sfigmomanometri rotti", "Pasti", "Carta", "Pannoloni"], correct: "Sfigmomanometri rotti" },
+                { question: "Quale regola vale per i solventi?", options: ["Non miscelarli", "Schiacciare", "Riempire del tutto", "Disinfettare"], correct: "Non miscelarli" },
+                { question: "Quale rifiuto chemioterapico è citotossico?", options: ["Antiblastici", "Pasti", "Carta", "Solventi"], correct: "Antiblastici" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale attività produce rifiuti sanitari?", options: ["Diagnosi", "Produzione industriale", "Insegnamento", "Cucina"], correct: "Diagnosi" },
+                { question: "Quale norma tutela la salute pubblica?", options: ["DPR 254/2003", "D.Lgs. 22/1997", "Legge 135/1990", "D.Lgs. 152/1997"], correct: "DPR 254/2003" },
+                { question: "Quale rifiuto è pericoloso infettivo?", options: ["Aghi", "Carta", "Pasti", "Vetro"], correct: "Aghi" },
+                { question: "Come si smaltiscono i rifiuti da estumulazioni?", options: ["Impianti autorizzati", "Discarica urbana", "Recupero", "Termodistruzione"], correct: "Impianti autorizzati" },
+                { question: "Quale rifiuto può essere sterilizzato?", options: ["Infettivi", "Non pericolosi", "Urbani", "Chimici"], correct: "Infettivi" },
+                { question: "Quale contenitore è per rifiuti non taglienti?", options: ["Cartone", "Halibox", "Tanica", "Sacco"], correct: "Cartone" },
+                { question: "Quale DPI è per i rifiuti non infettivi?", options: ["Guanti", "Occhiali", "Maschera", "Scarpe"], correct: "Guanti" },
+                { question: "Quale regola si applica ai taglienti?", options: ["Non portarli in tasca", "Passarli di mano", "Coprirli", "Schiacciarli"], correct: "Non portarli in tasca" },
+                { question: "Cosa si fa dopo un infortunio biologico?", options: ["Valutare la fonte", "Lavarsi le mani", "Ignorare", "Andare a casa"], correct: "Valutare la fonte" },
+                { question: "Quale rifiuto non infettivo è da diagnosi?", options: ["Reagenti scaduti", "Pannoloni", "Carta", "Pasti"], correct: "Reagenti scaduti" },
+                { question: "Come si smaltiscono i termometri rotti?", options: ["Contenitori ermetici", "Sacchi urbani", "Taniche", "Halibox"], correct: "Contenitori ermetici" },
+                { question: "Quale rifiuto non pericoloso è da pulizia?", options: ["Spazzatura locali", "Aghi", "Farmaci", "Sangue"], correct: "Spazzatura locali" },
+                { question: "Quale regola vale per i contenitori infettivi?", options: ["Verificare Halibox", "Riempire del tutto", "Schiacciare", "Disinfettare"], correct: "Verificare Halibox" },
+                { question: "Quale rifiuto richiede incenerimento obbligatorio?", options: ["Organi non riconoscibili", "Pasti", "Carta", "Vetro"], correct: "Organi non riconoscibili" },
+                { question: "Dove si depositano i chemioterapici?", options: ["Locale transitorio", "Farmacia", "Discarica", "Cimitero"], correct: "Locale transitorio" },
+                { question: "Quale codice classifica i rifiuti sanitari?", options: ["CER", "ISO", "HBS", "HIV"], correct: "CER" },
+                { question: "Quale rifiuto speciale è analogo agli infettivi?", options: ["Sangue fuori strutture", "Assorbenti igienici", "Carta", "Pasti"], correct: "Sangue fuori strutture" },
+                { question: "Quale DPI è per i taglienti?", options: ["Guanti monouso", "Cuffia", "Maschera", "Scarpe"], correct: "Guanti monouso" },
+                { question: "Quale regola evita il contatto con taglienti?", options: ["Non indirizzarli al corpo", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Non indirizzarli al corpo" },
+                { question: "Quale test si fa al paziente fonte?", options: ["Anti-HIV", "Glucosio", "Colesterolo", "Pressione"], correct: "Anti-HIV" },
+                { question: "Quale rifiuto non infettivo è da laboratorio?", options: ["Batterie", "Pasti", "Carta", "Pannoloni"], correct: "Batterie" },
+                { question: "Come si gestiscono i farmaci scaduti?", options: ["Farmacia ospedale", "Discarica", "Taniche", "Halibox"], correct: "Farmacia ospedale" },
+                { question: "Quale rifiuto non pericoloso è da infusione?", options: ["Lattine vuote", "Aghi", "Farmaci", "Sangue"], correct: "Lattine vuote" },
+                { question: "Quale contenitore è per i non pericolosi?", options: ["Riutilizzabile", "Halibox", "Tanica", "Cartone"], correct: "Riutilizzabile" },
+                { question: "Quale regola si applica agli aghi?", options: ["Doppio guanto", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Doppio guanto" },
+                { question: "Dove si va per il protocollo sanitario?", options: ["Medicina preventiva", "Farmacia", "Reparto", "Casa"], correct: "Medicina preventiva" },
+                { question: "Quale rifiuto non infettivo è da radiologia?", options: ["Amianto", "Pasti", "Carta", "Pannoloni"], correct: "Amianto" },
+                { question: "Quale rifiuto non pericoloso è monouso?", options: ["Teli", "Aghi", "Farmaci", "Sangue"], correct: "Teli" },
+                { question: "Quale regola vale per i contenitori non infettivi?", options: ["Non disinfettare", "Schiacciare", "Riempire del tutto", "Disinfettare"], correct: "Non disinfettare" },
+                { question: "Quale rifiuto chemioterapico è citostatico?", options: ["Antiblastici", "Pasti", "Carta", "Solventi"], correct: "Antiblastici" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale struttura produce rifiuti sanitari?", options: ["Ospedale", "Scuola", "Fabbrica", "Ufficio"], correct: "Ospedale" },
+                { question: "Quale decreto integra il D.Lgs. 152/2006?", options: ["DPR 254/2003", "Legge 135/1990", "D.Lgs. 22/1997", "DPR 152/1997"], correct: "DPR 254/2003" },
+                { question: "Quale rifiuto è non pericoloso?", options: ["Pannoloni non contaminati", "Aghi", "Sangue", "Organi"], correct: "Pannoloni non contaminati" },
+                { question: "Come si smaltiscono i rifiuti non infettivi?", options: ["Come non pericolosi", "Termodistruzione", "Discarica urbana", "Recupero"], correct: "Come non pericolosi" },
+                { question: "Quale rifiuto da cimiteri va separato?", options: ["Esumazioni", "Vegetali", "Pasti", "Carta"], correct: "Esumazioni" },
+                { question: "Quale contenitore è per i liquidi infettivi?", options: ["Taniche", "Halibox", "Cartone", "Sacco"], correct: "Taniche" },
+                { question: "Quale DPI è per i chemioterapici?", options: ["Maschera protettiva", "Cuffia", "Grembiule", "Calzini"], correct: "Maschera protettiva" },
+                { question: "Quale regola si applica ai taglienti?", options: ["Usare aghi atraumatici", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Usare aghi atraumatici" },
+                { question: "Cosa si fa dopo un infortunio con liquidi biologici?", options: ["Compilare scheda", "Lavarsi le mani", "Ignorare", "Andare a casa"], correct: "Compilare scheda" },
+                { question: "Quale rifiuto non infettivo è da radiologia?", options: ["Lampade fluorescenti", "Pannoloni", "Carta", "Pasti"], correct: "Lampade fluorescenti" },
+                { question: "Come si smaltiscono i solventi?", options: ["Fustini di plastica", "Taniche", "Sacchi", "Halibox"], correct: "Fustini di plastica" },
+                { question: "Quale rifiuto non pericoloso è da cucina?", options: ["Pasti non infetti", "Aghi", "Farmaci", "Sangue"], correct: "Pasti non infetti" },
+                { question: "Quale regola vale per i contenitori infettivi?", options: ["Chiudere ermeticamente", "Riempire del tutto", "Schiacciare", "Disinfettare"], correct: "Chiudere ermeticamente" },
+                { question: "Quale rifiuto richiede farmacia ospedale?", options: ["Farmaci scaduti", "Pasti", "Carta", "Vetro"], correct: "Farmaci scaduti" },
+                { question: "Quale contenitore è per i chemioterapici?", options: ["Con dicitura specifica", "Halibox", "Sacco urbano", "Tanica"], correct: "Con dicitura specifica" },
+                { question: "Quale codice classifica i rifiuti sanitari?", options: ["CER", "ISO", "HBS", "HIV"], correct: "CER" },
+                { question: "Quale rifiuto speciale è escluso?", options: ["Assorbenti igienici", "Sangue", "Aghi", "Organi"], correct: "Assorbenti igienici" },
+                { question: "Quale DPI è per i non infettivi?", options: ["Guanti", "Occhiali", "Maschera", "Scarpe"], correct: "Guanti" },
+                { question: "Quale regola evita il passaggio di aghi?", options: ["No-touch", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "No-touch" },
+                { question: "Quale test si richiede al paziente?", options: ["Anti-HIV", "Glucosio", "Colesterolo", "Pressione"], correct: "Anti-HIV" },
+                { question: "Quale rifiuto non infettivo è chimico?", options: ["Sfigmomanometri rotti", "Pasti", "Carta", "Pannoloni"], correct: "Sfigmomanometri rotti" },
+                { question: "Come si gestiscono i rifiuti da esumazioni?", options: ["Impianti autorizzati", "Discarica", "Taniche", "Halibox"], correct: "Impianti autorizzati" },
+                { question: "Quale rifiuto non pericoloso è da infusione?", options: ["Bottiglie vuote", "Aghi", "Farmaci", "Sangue"], correct: "Bottiglie vuote" },
+                { question: "Quale contenitore è per i non infettivi?", options: ["Riutilizzabile", "Halibox", "Tanica", "Cartone"], correct: "Riutilizzabile" },
+                { question: "Quale regola si applica ai taglienti?", options: ["Non raccoglierli se cadono", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Non raccoglierli se cadono" },
+                { question: "Dove si registra un infortunio?", options: ["Pronto soccorso", "Farmacia", "Reparto", "Casa"], correct: "Pronto soccorso" },
+                { question: "Quale rifiuto non infettivo è da analisi?", options: ["Soluzioni acquose", "Pasti", "Carta", "Pannoloni"], correct: "Soluzioni acquose" },
+                { question: "Quale rifiuto non pericoloso è da reparti?", options: ["Teli monouso", "Aghi", "Farmaci", "Sangue"], correct: "Teli monouso" },
+                { question: "Quale regola vale per i reagenti scaduti?", options: ["Imballarli in cartoni", "Schiacciare", "Riempire del tutto", "Disinfettare"], correct: "Imballarli in cartoni" },
+                { question: "Quale rifiuto chemioterapico è citotossico?", options: ["Antiblastici", "Pasti", "Carta", "Solventi"], correct: "Antiblastici" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale attività genera rifiuti sanitari?", options: ["Cura", "Produzione", "Insegnamento", "Vendita"], correct: "Cura" },
+                { question: "Quale norma regola i rifiuti sanitari?", options: ["DPR 254/2003", "D.Lgs. 22/1997", "Legge 135/1990", "DPR 152/1997"], correct: "DPR 254/2003" },
+                { question: "Quale rifiuto è assimilato agli urbani?", options: ["Plastica non infetta", "Aghi", "Sangue", "Organi"], correct: "Plastica non infetta" },
+                { question: "Come si smaltiscono i rifiuti infettivi?", options: ["Sterilizzazione", "Discarica", "Recupero", "Incenerimento"], correct: "Sterilizzazione" },
+                { question: "Quale rifiuto richiede incenerimento?", options: ["Parti anatomiche non riconoscibili", "Pasti", "Carta", "Vetro"], correct: "Parti anatomiche non riconoscibili" },
+                { question: "Dove si depositano i rifiuti da estumulazioni?", options: ["Area confinata", "Discarica", "Taniche", "Halibox"], correct: "Area confinata" },
+                { question: "Quale DPI è per i rifiuti infettivi?", options: ["Scarpe antinfortunistiche", "Cuffia", "Grembiule", "Calzini"], correct: "Scarpe antinfortunistiche" },
+                { question: "Quale contenitore è per i taglienti?", options: ["Halibox", "Cartone", "Tanica", "Sacco"], correct: "Halibox" },
+                { question: "Quale regola vale per i contenitori infettivi?", options: ["Non più di 3/4", "Riempire del tutto", "Schiacciare", "Disinfettare"], correct: "Non più di 3/4" },
+                { question: "Cosa si fa dopo aver chiuso un contenitore infettivo?", options: ["Eliminare guanti", "Ignorare", "Andare a casa", "Riempire un altro"], correct: "Eliminare guanti" },
+                { question: "Quale regola si applica agli aghi?", options: ["Pinza per rimuoverli", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Pinza per rimuoverli" },
+                { question: "Quale test si fa dopo un infortunio?", options: ["HBSAG", "Glucosio", "Colesterolo", "Pressione"], correct: "HBSAG" },
+                { question: "Quale rifiuto non infettivo è da laboratorio?", options: ["Reagenti scaduti", "Pannoloni", "Carta", "Pasti"], correct: "Reagenti scaduti" },
+                { question: "Come si smaltiscono le lampade fluorescenti?", options: ["Contenitori ermetici", "Sacchi urbani", "Taniche", "Halibox"], correct: "Contenitori ermetici" },
+                { question: "Quale rifiuto non pericoloso è da reparti?", options: ["Gessi ortopedici", "Aghi", "Farmaci", "Sangue"], correct: "Gessi ortopedici" },
+                { question: "Quale colore usano i sacchetti non pericolosi?", options: ["Conforme al comune", "Rosso", "Giallo", "Verde"], correct: "Conforme al comune" },
+                { question: "Quale rifiuto richiede farmacia?", options: ["Farmaci scaduti", "Pasti", "Carta", "Vetro"], correct: "Farmaci scaduti" },
+                { question: "Quale contenitore è per i chemioterapici?", options: ["Con dicitura specifica", "Halibox", "Sacco urbano", "Tanica"], correct: "Con dicitura specifica" },
+                { question: "Quale codice è usato per i rifiuti?", options: ["CER", "ISO", "HBS", "HIV"], correct: "CER" },
+                { question: "Quale rifiuto speciale è escluso dagli infettivi?", options: ["Assorbenti igienici", "Sangue", "Aghi", "Organi"], correct: "Assorbenti igienici" },
+                { question: "Quale DPI è per i non infettivi?", options: ["Guanti", "Occhiali", "Maschera", "Scarpe"], correct: "Guanti" },
+                { question: "Quale regola evita il contatto con taglienti?", options: ["No-touch", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "No-touch" },
+                { question: "Quale test si fa al paziente fonte?", options: ["Anti-HCV", "Glucosio", "Colesterolo", "Pressione"], correct: "Anti-HCV" },
+                { question: "Quale rifiuto non infettivo è da radiologia?", options: ["Soluzioni acquose", "Pasti", "Carta", "Pannoloni"], correct: "Soluzioni acquose" },
+                { question: "Come si gestiscono i rifiuti da esumazioni?", options: ["Impianti autorizzati", "Discarica", "Taniche", "Halibox"], correct: "Impianti autorizzati" },
+                { question: "Quale rifiuto non pericoloso è da infusione?", options: ["Bottiglie vuote", "Aghi", "Farmaci", "Sangue"], correct: "Bottiglie vuote" },
+                { question: "Quale contenitore è per i non pericolosi?", options: ["Riutilizzabile", "Halibox", "Tanica", "Cartone"], correct: "Riutilizzabile" },
+                { question: "Quale regola si applica ai taglienti?", options: ["Doppio guanto", "Passarli di mano", "Portarli in tasca", "Coprirli"], correct: "Doppio guanto" },
+                { question: "Dove si va per il protocollo sanitario?", options: ["Medicina preventiva", "Farmacia", "Reparto", "Casa"], correct: "Medicina preventiva" },
+                { question: "Quale rifiuto non infettivo è da analisi?", options: ["Sfigmomanometri rotti", "Pasti", "Carta", "Pannoloni"], correct: "Sfigmomanometri rotti" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let timerInterval = null;
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                resetQuiz();
+                return;
+            }
+            resetQuiz();
+            currentQuiz = shuffleArray([...allQuestions[selectedQuiz - 1]]);
+            startQuiz();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            const ballsContainer = document.getElementById('quiz-balls');
+            ballsContainer.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'quiz-ball';
+                ball.textContent = i;
+                ballsContainer.appendChild(ball);
+            }
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            let timeLeft = 30 * 60; // 30 minuti in secondi
+            const timerDisplay = document.getElementById('quiz-timer');
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentQuiz.length) {
+                endQuiz();
+                return;
+            }
+            const question = currentQuiz[currentQuestionIndex];
+            document.getElementById('quiz-question').textContent = question.question;
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(option, question.correct);
+                optionsContainer.appendChild(optionElement);
+            });
+            document.getElementById('quiz-feedback').style.display = 'none';
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedback = document.getElementById('quiz-feedback');
+            const balls = document.getElementsByClassName('quiz-ball');
+            if (selected === correct) {
+                feedback.textContent = 'Risposta corretta!';
+                feedback.className = 'quiz-feedback correct';
+                balls[currentQuestionIndex].classList.add('correct');
+                correctAnswers++;
+            } else {
+                feedback.textContent = `Risposta sbagliata. La risposta corretta era: ${correct}`;
+                feedback.className = 'quiz-feedback incorrect';
+                balls[currentQuestionIndex].classList.add('incorrect');
+            }
+            feedback.style.display = 'block';
+            currentQuestionIndex++;
+            setTimeout(loadQuestion, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-timer').style.display = 'none';
+            document.getElementById('quiz-question').textContent = '';
+            document.getElementById('quiz-options').innerHTML = '';
+            document.getElementById('quiz-feedback').style.display = 'none';
+            const result = document.getElementById('quiz-result');
+            result.innerHTML = `Quiz completato! Risposte corrette: ${correctAnswers} su ${currentQuiz.length}`;
+            document.getElementById('retry-button').style.display = 'block';
+        }
+
+        function resetQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-timer').style.display = 'none';
+            document.getElementById('quiz-balls').style.display = 'none';
+            document.getElementById('quiz-question').textContent = '';
+            document.getElementById('quiz-options').innerHTML = '';
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('quiz-result').innerHTML = '';
+            document.getElementById('retry-button').style.display = 'none';
+        }
+
+        document.getElementById('retry-button').onclick = () => {
+            resetQuiz();
+            startQuiz();
+        };
+    </script>
+</body>
+</html>
